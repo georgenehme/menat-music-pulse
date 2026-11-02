@@ -14,7 +14,9 @@ for actual freshness. Scheduled runs and upstream feeds may be delayed.
 - First observations, re-entries and rank movements are distinct. A first observation is not a lifetime debut.
 - Missing, partial or stale sources are disclosed. Last good charts may be retained with their original dates.
 - Unsubstantiated explanations say **Reason not verified**.
-- Apple Music RSS most-played charts, Kworb Spotify daily charts and Kworb YouTube weekly charts are distinct sources; coverage varies by market.
+- Apple Music RSS most-played charts, Kworb Spotify daily charts, Kworb YouTube weekly charts and Anghami country Top 50 charts are distinct sources; coverage varies by market.
+- An Anghami connection is prepared for Palestine and Syria's official country Top 50 playlists, but its public pages currently block the cloud collector with browser verification. Production coverage remains 16 markets until approved access or another verified feed is available. Source status exposes this limitation; local test snapshots are not production data.
+- When accessible, Anghami source dates are playlist update timestamps, distinct from collection times, and each country starts its own baseline. All collection remains in the cloud.
 
 ## Hosting
 

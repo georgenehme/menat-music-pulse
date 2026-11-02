@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#101126">
-<meta name="description" content="MENAT Music Pulse: regional music chart intelligence, first observations and editorial discovery across MENAT and Pakistan.">
+<meta name="description" content="MENAT Music Pulse: real music charts and editorial discovery across MENAT and Pakistan, updated automatically.">
 <title>MENAT Music Pulse | Regional Music Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -75,47 +75,11 @@ body[data-theme="dark"] .newsletter-signup>small{color:#c0b7cd}
 @media(max-width:1010px){.newsletter-section{grid-template-columns:1fr 1fr}.newsletter-intro{padding:33px 26px}.newsletter-signup{padding:30px 23px}}
 @media(max-width:790px){.newsletter-section{grid-template-columns:1fr}.newsletter-intro{padding:28px 25px 22px}.newsletter-intro h2{font-size:31px}.newsletter-signup{padding:28px 25px}.digest-preview{flex-direction:column;align-items:flex-start}}
 @media(max-width:650px){.newsletter-section{margin-top:25px;border-radius:19px}.newsletter-intro h2{font-size:30px;line-height:1.23}.newsletter-perks{margin-top:19px;gap:7px}.newsletter-perks span{font-size:9px}.newsletter-signup h3{font-size:20px}.digest-preview a{width:100%;justify-content:center}.newsletter-nav-link{display:flex!important}}
+
+.filter-left{flex-wrap:wrap}.source-market{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid #8882;font-size:11px}.source-market small{display:block;margin-top:3px}.status-stale{color:#b05b22}.status-fresh{color:#198168}.table-surface{overflow:hidden}.rank-detail{display:block;font-size:9px;color:var(--muted);margin-top:5px}.source-card{align-self:start}#update-status{max-width:280px;line-height:1.5}.feed-toolbar{flex-wrap:wrap;gap:12px}@media(max-width:650px){.filter-control{max-width:100%}.filter-control select{max-width:150px}.intro-actions{margin-top:10px}}
+.mobile-track-meta{display:none}@media(max-width:790px){.mobile-track-meta{display:block;font-size:9px;color:var(--muted);margin-top:6px;white-space:normal}}
 </style>
-<script>
-/* Standalone offline preview: local demo and an empty real-data snapshot only. */
-window.__newsletterConfig={
-  "provider": "mailerlite",
-  "account_id": "",
-  "form_id": "",
-  "hosted_form_url": "",
-  "weekly_send_day": "Friday",
-  "timezone": "Asia/Dubai",
-  "status": "not_configured"
-}
-;window.__radar={
-  "schema": 1,
-  "mode": "live",
-  "generated_at": null,
-  "time_zone": "Asia/Dubai",
-  "status": "awaiting_first_sync",
-  "source_description": "Apple Music country charts and experimental Kworb Spotify / YouTube country charts · Turkey included",
-  "summary": {
-    "new_entries_today": 0,
-    "new_entries_7d": 0,
-    "markets_checked": 0,
-    "markets_attempted": 18,
-    "current_tracks": 0,
-    "errors": 0
-  },
-  "new_entries": [],
-  "current_charts": [],
-  "source_status": [],
-  "alerts": {
-    "email_configured": false,
-    "telegram_configured": false,
-    "email_sent": false,
-    "telegram_sent": false
-  },
-  "editorial_note": "The first successful scan creates a baseline and does not issue alerts. New entries appear after a later scan. The initial website contains no fabricated chart data."
-}
-;
-window.fetch=async (url)=>({ok:true,json:async()=>String(url).includes('newsletter/config')?window.__newsletterConfig:window.__radar});
-</script></head>
+</head>
 <body data-theme="light">
 <div class="app-shell" id="app-shell">
   <aside class="sidebar" id="sidebar">
@@ -124,10 +88,10 @@ window.fetch=async (url)=>({ok:true,json:async()=>String(url).includes('newslett
     <nav class="nav-list" aria-label="Main navigation">
       <button class="nav-item active" data-view="overview"><span data-icon="layout"></span><span>Overview</span></button>
       <button class="nav-item" data-view="entries"><span data-icon="sparkles"></span><span>Discoveries</span><span class="nav-badge" id="nav-count">0</span></button>
+      <button class="nav-item" data-view="returns"><span data-icon="refresh"></span><span>Returning tracks</span></button>
       <button class="nav-item" data-view="charts"><span data-icon="chart"></span><span>Chart explorer</span></button>
       <button class="nav-item" data-view="watchlist"><span data-icon="bookmark"></span><span>Watchlist</span><span class="nav-badge" id="watch-count">0</span></button>
-      <button class="nav-item" data-view="sources"><span data-icon="database"></span><span>Sources & sync</span></button>
-      <a class="nav-item newsletter-nav-link" href="#newsletter-section"><span data-icon="bell"></span><span>Friday newsletter</span></a>
+      <button class="nav-item" data-view="sources"><span data-icon="database"></span><span>Sources & freshness</span></button>
     </nav>
     <div class="sidebar-caption region-caption">QUICK MARKETS</div>
     <div class="region-nav" id="region-nav">
@@ -140,9 +104,8 @@ window.fetch=async (url)=>({ok:true,json:async()=>String(url).includes('newslett
       <button data-region="Pakistan"><span class="region-dot" style="--region:#b8dc7f"></span>Pakistan <small>01</small></button>
     </div>
     <div class="sidebar-spacer"></div>
-    <div class="sidebar-status"><div class="status-orbit"><span></span></div><div><strong>Radar scheduled</strong><p>Daily · 12:00 Dubai</p></div></div>
-    <button class="sidebar-help" id="sidebar-setup"><span data-icon="help"></span> Setup & documentation <span data-icon="arrow-up-right"></span></button>
-    <div class="sidebar-edition">EDITORIAL EDITION <span>V4.0</span></div>
+    <div class="sidebar-status"><div class="status-orbit"><span></span></div><div><strong id="schedule-label">Chart updates</strong><p id="schedule-time">Loading status</p></div></div>
+    <div class="sidebar-edition">EDITORIAL EDITION <span>V5.0</span></div>
   </aside>
 
   <div class="app-main">
@@ -152,24 +115,22 @@ window.fetch=async (url)=>({ok:true,json:async()=>String(url).includes('newslett
     </header>
 
     <main class="dashboard" id="dashboard">
-      <div class="page-intro"><div><p class="eyebrow"><span class="eyebrow-line"></span> THE EDITORIAL RADAR <span class="today-date" id="today"></span></p><h1 id="page-title">Your next big <em>discovery.</em></h1><p id="page-description">One intelligent view of the tracks breaking into charts across your markets.</p></div><div class="intro-actions"><button class="btn btn-quiet" id="toggle-demo"><span data-icon="eye"></span><span id="demo-button-text">Explore demo</span></button><button class="btn btn-primary" id="open-import"><span data-icon="upload"></span> Import charts</button></div></div>
-
-      <div class="demo-alert" id="demo-alert" hidden><span class="demo-alert-tag"><span data-icon="eye"></span> PREVIEW MODE</span><span>Illustrative artists and chart positions. No demo records are presented as real charts.</span><button id="switch-live">View live data <span data-icon="arrow-right"></span></button></div>
+      <div class="page-intro"><div><p class="eyebrow"><span class="eyebrow-line"></span> THE EDITORIAL RADAR <span class="today-date" id="today"></span></p><h1 id="page-title">Your next big <em>discovery.</em></h1><p id="page-description">One intelligent view of the tracks breaking into charts across your markets.</p></div><div class="intro-actions"><span class="mini-status" id="update-status">Loading chart data…</span></div></div>
 
       <section class="hero-section" id="hero-section" aria-label="Daily radar briefing">
-        <div class="hero-copy"><div class="hero-status"><span class="live-dot"></span><span id="hero-status">AWAITING FIRST SCAN</span></div><h2 id="hero-title">The sound of<br><span>what’s next.</span></h2><p id="hero-desc">Chart monitoring becomes actionable when a new song breaks through. Explore the preview or connect your scanner.</p><div class="hero-cta"><button id="hero-explore" class="hero-button">Explore discoveries <span data-icon="arrow-up-right"></span></button><span class="hero-schedule"><span data-icon="clock"></span> Next scan · <strong>12:00 GST</strong></span></div></div>
+        <div class="hero-copy"><div class="hero-status"><span class="live-dot"></span><span id="hero-status">AWAITING FIRST SCAN</span></div><h2 id="hero-title">The sound of<br><span>what’s next.</span></h2><p id="hero-desc">Real chart positions, original sources and new observations across your markets.</p><div class="hero-cta"><button id="hero-explore" class="hero-button">Explore discoveries <span data-icon="arrow-up-right"></span></button><span class="hero-schedule"><span data-icon="clock"></span> <span id="hero-schedule">Loading latest charts</span></span></div></div>
         <div class="hero-visual" aria-hidden="true"><div class="halo halo-1"></div><div class="halo halo-2"></div><div class="halo halo-3"></div><div class="visual-center"><span class="visual-label">ON THE RADAR</span><strong id="hero-visual-number">00</strong><span class="visual-foot">NEW SIGNALS</span></div><div class="signal-waves"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="float-pill float-pill-one"><span>♫</span> DISCOVER</div><div class="float-pill float-pill-two"><span>↗</span> GROW</div></div>
       </section>
 
       <section class="kpi-grid" id="kpi-grid" aria-label="Snapshot metrics">
         <article class="kpi-card"><div class="kpi-top"><span>New today</span><span class="kpi-symbol kpi-violet" data-icon="sparkles"></span></div><strong id="kpi-today">0</strong><div class="kpi-bottom"><span class="mini-status" id="kpi-today-label">Awaiting scan</span><span>fresh observations</span></div></article>
-        <article class="kpi-card"><div class="kpi-top"><span>New this week</span><span class="kpi-symbol kpi-cyan" data-icon="trend"></span></div><strong id="kpi-week">0</strong><div class="kpi-bottom"><span class="mini-status" id="kpi-week-label">Last 7 days</span><span>unique tracks</span></div></article>
-        <article class="kpi-card"><div class="kpi-top"><span>Markets checked</span><span class="kpi-symbol kpi-peach" data-icon="globe"></span></div><strong><span id="kpi-markets">0</span><small>/ 18</small></strong><div class="kpi-bottom"><span class="mini-status" id="kpi-coverage-label">Awaiting scan</span><span>countries scanned</span></div></article>
-        <article class="kpi-card"><div class="kpi-top"><span>Current chart tracks</span><span class="kpi-symbol kpi-lime" data-icon="music"></span></div><strong id="kpi-tracks">0</strong><div class="kpi-bottom"><span class="mini-status">Chart snapshots</span><span>observed positions</span></div></article>
+        <article class="kpi-card"><div class="kpi-top"><span>New this week</span><span class="kpi-symbol kpi-cyan" data-icon="trend"></span></div><strong id="kpi-week">0</strong><div class="kpi-bottom"><span class="mini-status" id="kpi-week-label">Last 7 days</span><span>unique per platform</span></div></article>
+        <article class="kpi-card"><div class="kpi-top"><span>Markets checked</span><span class="kpi-symbol kpi-peach" data-icon="globe"></span></div><strong><span id="kpi-markets">0</span><small>/ 18</small></strong><div class="kpi-bottom"><span class="mini-status" id="kpi-coverage-label">Awaiting scan</span><span>with fresh sources</span></div></article>
+        <article class="kpi-card"><div class="kpi-top"><span>Chart positions</span><span class="kpi-symbol kpi-lime" data-icon="music"></span></div><strong id="kpi-tracks">0</strong><div class="kpi-bottom"><span class="mini-status">Chart snapshots</span><span>observed positions</span></div></article>
       </section>
 
       <section class="channel-section" id="channel-section" aria-label="Explore music platforms">
-        <div class="section-head channel-heading"><div><p class="section-kicker">THE CHART UNIVERSE</p><h2>One radar. More signals.</h2><p class="section-description">Explore charting tracks across platforms. Sources not connected stay transparently labeled.</p></div><button class="more-link" id="show-all-sources">All 17 sources <span data-icon="arrow-up-right"></span></button></div>
+        <div class="section-head channel-heading"><div><p class="section-kicker">THE CHART UNIVERSE</p><h2>One radar. More signals.</h2><p class="section-description">Explore charting tracks across platforms. Sources not connected stay transparently labeled.</p></div><button class="more-link" id="show-all-sources">Source coverage <span data-icon="arrow-up-right"></span></button></div>
         <div class="channel-grid" id="channel-grid"></div>
       </section>
       <section class="insights-grid" id="insights-section" aria-label="Discovery analytics">
@@ -178,34 +139,14 @@ window.fetch=async (url)=>({ok:true,json:async()=>String(url).includes('newslett
       </section>
 
       <section class="discovery-section" id="discovery-section"><div class="section-head discovery-heading"><div><p class="section-kicker" id="feed-kicker">DISCOVERY FEED</p><h2 id="feed-title">Just landed <span id="feed-total" class="headline-count">0</span></h2><p class="section-description" id="feed-description">First observed on monitored charts. Never confused with verified lifetime debuts.</p></div><div class="feed-actions"><button class="btn btn-quiet btn-small" id="export-csv"><span data-icon="download"></span> Export CSV</button><button class="btn btn-quiet btn-small" id="reset-filters"><span data-icon="refresh"></span> Reset filters</button></div></div>
-      <div class="surface-card table-surface"><div class="feed-toolbar"><div class="filter-left"><label class="filter-control"><span data-icon="globe"></span><select id="region-filter" aria-label="Filter by region"><option value="all">All regions</option><option>GCC</option><option>Egypt</option><option>Levant</option><option>North Africa</option><option>Iraq</option><option>Turkey</option><option>Pakistan</option></select></label><label class="filter-control"><span data-icon="layers"></span><select id="platform-filter" aria-label="Filter by platform"><option value="all">All platforms</option><option>Apple Music</option><option>Spotify</option><option>YouTube Music</option><option>Anghami</option><option>Shazam</option><option>Deezer</option><option>TikTok</option><option>Audiomack</option><option>SoundCloud</option><option>Boomplay</option><option>JioSaavn</option><option>Gaana</option><option>Yandex Music</option><option>Beatport</option><option>Musicrank</option><option>MusicMetrics</option><option>Kworb</option><option>Other</option></select></label><label class="filter-control"><span data-icon="database"></span><select id="source-filter" aria-label="Filter by chart data source"><option value="all">All sources</option><option>Apple Music RSS</option><option>Kworb</option><option>Partner CSV</option><option>Browser CSV</option></select></label><label class="filter-control" id="days-container"><span data-icon="calendar"></span><select id="days-filter" aria-label="Filter by date"><option value="7">Last 7 days</option><option value="1">Today</option><option value="30">Last 30 days</option><option value="all">All history</option></select></label></div><label class="sort-control">SORT BY <select id="sort-select" aria-label="Sort chart entries"><option value="newest">Newest first</option><option value="rank">Best chart rank</option><option value="artist">Artist A–Z</option></select></label></div><div class="active-filter-strip" id="active-filter-strip" hidden></div><div class="table-header" id="table-header"><span>TRACK / ARTIST</span><span>MARKET & PLATFORM</span><span>POSITION</span><span>EDITORIAL CONTEXT</span><span>WATCH</span></div><div class="feed-list" id="feed-list" aria-live="polite"></div><div class="table-footer"><span id="feed-footer">No chart observations yet</span><button id="load-more" class="more-link" hidden>Show more <span data-icon="chevron-down"></span></button></div></div>
+      <div class="surface-card table-surface"><div class="feed-toolbar"><div class="filter-left"><label class="filter-control"><span data-icon="globe"></span><select id="region-filter" aria-label="Filter by region"><option value="all">All regions</option><option>GCC</option><option>Egypt</option><option>Levant</option><option>North Africa</option><option>Iraq</option><option>Turkey</option><option>Pakistan</option></select></label><label class="filter-control"><span data-icon="globe"></span><select id="country-filter" aria-label="Filter by country"><option value="all">All countries</option></select></label><label class="filter-control"><span data-icon="layers"></span><select id="platform-filter" aria-label="Filter by platform"><option value="all">All platforms</option><option>Apple Music</option><option>Spotify</option><option>YouTube Music</option></select></label><label class="filter-control"><span data-icon="database"></span><select id="source-filter" aria-label="Filter by chart data source"><option value="all">All sources</option><option>Apple Music RSS</option><option>Kworb</option></select></label><label class="filter-control" id="days-container"><span data-icon="calendar"></span><select id="days-filter" aria-label="Filter by date"><option value="7">Last 7 days</option><option value="1">Today</option><option value="30">Last 30 days</option><option value="all">All history</option></select></label></div><label class="sort-control">SORT BY <select id="sort-select" aria-label="Sort chart entries"><option value="newest">Newest first</option><option value="rank">Best chart rank</option><option value="artist">Artist A–Z</option></select></label></div><div class="active-filter-strip" id="active-filter-strip" hidden></div><div class="table-header" id="table-header"><span>TRACK / ARTIST</span><span>MARKET & PLATFORM</span><span>POSITION</span><span>EDITORIAL CONTEXT</span><span>WATCH</span></div><div class="feed-list" id="feed-list" aria-live="polite"></div><div class="table-footer"><span id="feed-footer">No chart observations yet</span><button id="load-more" class="more-link" hidden>Show more <span data-icon="chevron-down"></span></button></div></div>
       </section>
 
-      <section class="sources-section" id="sources-section" hidden><div class="section-head"><div><p class="section-kicker">SOURCE TRANSPARENCY</p><h2>Connected chart coverage</h2><p class="section-description">Verified automation, experimental adapters, and authorized imports are shown separately. See exact statuses and original source links.</p></div></div><div class="source-summary" id="source-summary" aria-live="polite"></div><div class="source-grid" id="source-grid"></div><p class="source-disclaimer">“Added” does not mean a service is connected. MENAT Music Pulse only shows real entries after an available feed succeeds or a valid snapshot is imported.</p></section>
+      <section class="sources-section" id="sources-section" hidden><div class="section-head"><div><p class="section-kicker">SOURCE TRANSPARENCY</p><h2>Connected chart coverage</h2><p class="section-description">See each market’s source date, latest collection result and original chart.</p></div></div><div class="source-summary" id="source-summary" aria-live="polite"></div><div class="source-grid" id="source-grid"></div><p class="source-disclaimer">Chart rankings belong to their respective providers. Apple Music RSS and Kworb are credited beside each result. Unavailable sources do not imply an absence of activity.</p></section>
 
-      <section class="bottom-grid" id="bottom-grid"><div class="information-card"><div class="info-icon info-purple"><span data-icon="bell"></span></div><div><p class="section-kicker">SMART NOTIFICATIONS</p><h3>Only ping when something changes.</h3><p>Scheduled checks detect new chart observations. Email or Telegram delivery requires optional secrets in the deployment repository.</p><span class="info-meta" id="notification-status">Notifications not connected</span></div><button class="more-link" id="notification-setup">Setup guide <span data-icon="arrow-up-right"></span></button></div><div class="information-card source-small"><div class="info-icon info-cyan"><span data-icon="shield"></span></div><div><p class="section-kicker">DATA INTEGRITY</p><h3 id="source-health-heading">Waiting for baseline</h3><p id="source-health-desc">The first successful check establishes a baseline; only subsequent new observations count.</p><span class="info-meta" id="last-scan">Never scanned</span></div></div></section>
+      <section class="bottom-grid" id="bottom-grid"><div class="information-card"><div class="info-icon info-purple"><span data-icon="bell"></span></div><div><p class="section-kicker">AUTOMATIC CHART UPDATES</p><h3>New charts, without the busywork.</h3><p>Charts refresh daily. The first collection establishes a baseline; later snapshots reveal newly observed tracks and returning entries.</p><span class="info-meta" id="notification-status">Checking latest collection</span></div></div><div class="information-card source-small"><div class="info-icon info-cyan"><span data-icon="shield"></span></div><div><p class="section-kicker">DATA INTEGRITY</p><h3 id="source-health-heading">Waiting for baseline</h3><p id="source-health-desc">The first successful check establishes a baseline; only subsequent new observations count.</p><span class="info-meta" id="last-scan">Never scanned</span></div></div></section>
 
-      <section class="newsletter-section" id="newsletter-section" aria-label="Weekly MENAT Music Pulse newsletter">
-        <div class="newsletter-intro">
-          <span class="newsletter-eyebrow">THE FRIDAY EDIT · MUSIC INTELLIGENCE</span>
-          <h2>A week of signals.<br><em>One essential email.</em></h2>
-          <p>First-observed tracks, the markets moving, and chart evidence from MENAT and Pakistan. A concise editorial digest every Friday, when sending is connected.</p>
-          <div class="newsletter-perks"><span>♫ New chart entries</span><span>◎ Markets & platforms</span><span>↗ Editorial context</span></div>
-        </div>
-        <div class="newsletter-signup" id="newsletter-signup">
-          <span class="newsletter-state" id="newsletter-state">SIGNUP NOT YET CONNECTED</span>
-          <h3>Get the Friday Pulse</h3>
-          <p id="newsletter-signup-desc">Subscription is not live yet. Connect the mailing provider first. No email addresses are collected by this preview.</p>
-          <div id="newsletter-form-embed"></div>
-          <a id="newsletter-hosted-link" class="newsletter-action" href="https://www.mailerlite.com/" target="_blank" rel="noopener noreferrer">Set up the mailing list ↗</a>
-          <small>Optional newsletter only · Confirmation email · Unsubscribe anytime</small>
-        </div>
-      </section>
-      <section class="digest-preview" aria-label="Friday newsletter archive">
-        <div class="digest-text"><p class="section-kicker">WEEKLY EDITORIAL RECAP</p><h2>Friday Pulse archive</h2><p id="digest-status">No issue published yet. A Friday workflow generates the digest from verified chart observations.</p></div>
-        <span class="btn btn-quiet" title="The live Friday archive is available after deployment">Archive available after deployment</span>
-      </section>
-      <footer class="footer"><span>© <span id="year"></span> MENAT Music Pulse · Built for music editorial discovery · <span title="Included in complete project">Privacy notice</span></span><span>Evidence first. Discovery always. <span class="footer-pulse">●</span></span></footer>
+      <footer class="footer"><span>© <span id="year"></span> MENAT Music Pulse · Built for music editorial discovery · <a href="privacy.html">Privacy</a></span><span>Evidence first. Discovery always. <span class="footer-pulse">●</span></span></footer>
     </main>
   </div>
 </div>
@@ -213,251 +154,8 @@ window.fetch=async (url)=>({ok:true,json:async()=>String(url).includes('newslett
 <div class="toast-area" id="toast-area" aria-live="polite"></div>
 
 <dialog id="track-dialog" class="modal track-dialog"><button class="modal-close" data-close="track-dialog" aria-label="Close song details"><span data-icon="x"></span></button><div id="track-details"></div></dialog>
-<dialog id="import-dialog" class="modal import-dialog"><button class="modal-close" data-close="import-dialog" aria-label="Close import dialog"><span data-icon="x"></span></button><p class="section-kicker">EXPAND YOUR SIGNAL</p><h2>Import chart snapshots</h2><p class="modal-lead">Add Anghami, Deezer, YouTube Music, Shazam, TikTok, Audiomack and other platforms using full CSV snapshots. Your first import establishes a baseline. New tracks are detected on your next import.</p><div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Choose or drop a CSV file"><span class="drop-icon" data-icon="upload"></span><strong>Drag your chart CSV here</strong><span>or click to browse your files</span><small>CSV · Required columns: country, platform, rank, title, artist</small></div><input type="file" accept=".csv,text/csv" id="import-file" hidden><div class="modal-hint"><span data-icon="info"></span><div>Imported data stays in this browser. It does not feed the scheduled cloud scanner or send notifications.</div></div><a href="sample-import.csv" download class="template-link">Download CSV template <span data-icon="download"></span></a></dialog>
-<dialog id="setup-dialog" class="modal setup-dialog"><button class="modal-close" data-close="setup-dialog" aria-label="Close setup guide"><span data-icon="x"></span></button><p class="section-kicker">GO LIVE WITH MENAT MUSIC PULSE</p><h2>Activate your daily radar</h2><p class="modal-lead">This static website can be deployed to a public URL from a private GitHub repository. The included GitHub Action checks Apple Music feeds and attempts Kworb Spotify and weekly YouTube pages while honoring robots rules. Partner charts can be imported from authorized CSV exports.</p><div class="setup-steps"><div><b>01</b><span>Upload to a private GitHub repository with the <code>.github/workflows</code> directory included.</span></div><div><b>02</b><span>Allow Actions write permissions, then run the workflow once to build the baseline.</span></div><div><b>03</b><span>Connect the private GitHub repository to Cloudflare Pages; set Build command to <code>python3 scripts/build_site.py</code> and Output directory to <code>dist</code>.</span></div><div><b>04</b><span>Add chart alert secrets only if needed. Connect the MailerLite embedded form to collect confirmed newsletter subscribers. Weekly email sends require a newsletter provider campaign.</span></div></div><div class="modal-hint"><span data-icon="info"></span><div>GitHub's scheduled runs can be delayed. This website is separate from any existing ChatGPT automation.</div></div></dialog>
 
 
-<script>/* MENAT Music Pulse: newsletters are managed by MailerLite, not this public site.
-   The account ID and embedded form ID are public widget identifiers, NOT API tokens. */
-(async function(){
- const dest=document.getElementById('newsletter-form-embed');
- const label=document.getElementById('newsletter-state');
- const desc=document.getElementById('newsletter-signup-desc');
- const link=document.getElementById('newsletter-hosted-link');
- if(!dest||!label||!desc||!link)return;
- try{
-  const res=await fetch('newsletter/config.json',{cache:'no-store'});if(!res.ok)throw Error('Configuration not available');
-  const c=await res.json();
-  const account=String(c.account_id||'').trim(), form=String(c.form_id||'').trim();
-  const formValid=/^\d{4,20}$/.test(account)&&/^[a-zA-Z0-9_-]{4,32}$/.test(form);
-  let hosted=null;try{const u=new URL(c.hosted_form_url||'');if(u.protocol==='https:')hosted=u.href;}catch{}
-  if(hosted){link.href=hosted;link.textContent='Open secure subscription form ↗';link.hidden=false;}else{link.hidden=true;}
-  if(!formValid){label.textContent='NOT YET CONNECTED';desc.textContent='Signup opens when the newsletter account is connected. No email is collected by this preview.';return;}
-  // Only load MailerLite's documented universal embed from its official domain.
-  window.ml=window.ml||function(){(window.ml.q=window.ml.q||[]).push(arguments)};
-  window.ml('account',account);
-  const el=document.createElement('div');el.className='ml-embedded';el.dataset.form=form;dest.appendChild(el);
-  const script=document.createElement('script');script.src='https://assets.mailerlite.com/js/universal.js';script.async=true;
-  script.onerror=()=>{label.textContent='FORM TEMPORARILY UNAVAILABLE';desc.textContent='Please use the secure hosted signup page instead.';};
-  document.head.appendChild(script);
-  label.textContent='EMAIL SIGNUP';desc.textContent='Add your address using the secure newsletter form below and confirm by email.';
- }catch(err){label.textContent='SIGNUP NOT CONNECTED';desc.textContent='Newsletter configuration could not be loaded.';link.hidden=true;}
-})();
-</script>
-<script>/* MENAT Music Pulse v3: interactive editorial dashboard. Public chart data from data/radar.json,
-   browser-local imported snapshots from localStorage. Demo data is always labeled. */
-'use strict';
-const SOURCE_CATALOG=[{"name":"Apple Music","platform":"Apple Music","mode":"automatic","provider":"Apple Music RSS","url":"https://rss.applemarketingtools.com/","detail":"Public country Top 100 song snapshots."},{"name":"Kworb : Spotify","platform":"Spotify","mode":"experimental","provider":"Kworb","url":"https://kworb.net/spotify/","detail":"Spotify country daily charts, checked for date, completeness and robots permission."},{"name":"Kworb : YouTube","platform":"YouTube Music","mode":"experimental","provider":"Kworb","url":"https://kworb.net/youtube/insights/","detail":"Weekly YouTube country insights; not the official daily Shorts chart."},{"name":"Anghami","platform":"Anghami","mode":"import","provider":"Partner CSV","url":"https://www.anghami.com/","detail":"Key MENA source. Requires licensed export or curated full-chart snapshot."},{"name":"Deezer","platform":"Deezer","mode":"import","provider":"Partner CSV","url":"https://www.deezer.com/","detail":"Country-level export needed; generic public global chart is not interchangeable."},{"name":"YouTube Music official","platform":"YouTube Music","mode":"import","provider":"Partner CSV","url":"https://charts.youtube.com/","detail":"Daily songs, music videos, Shorts signals via approved full-chart export."},{"name":"Shazam","platform":"Shazam","mode":"import","provider":"Partner CSV","url":"https://www.shazam.com/charts/","detail":"Identification trends. Use country-specific licensed or manually exported chart."},{"name":"TikTok","platform":"TikTok","mode":"import","provider":"Partner CSV","url":"https://ads.tiktok.com/business/creativecenter/","detail":"Viral audio signals; access to country song rankings varies."},{"name":"Audiomack","platform":"Audiomack","mode":"import","provider":"Partner CSV","url":"https://audiomack.com/charts","detail":"Independent hip-hop, Pakistani/Punjabi and Afrosounds discovery."},{"name":"SoundCloud","platform":"SoundCloud","mode":"import","provider":"Partner CSV","url":"https://soundcloud.com/charts","detail":"Emerging independent scenes and underground discovery."},{"name":"Boomplay","platform":"Boomplay","mode":"import","provider":"Partner CSV","url":"https://www.boomplay.com/","detail":"Afrobeats and regional cross-market signals."},{"name":"JioSaavn","platform":"JioSaavn","mode":"import","provider":"Partner CSV","url":"https://www.jiosaavn.com/","detail":"South Asian repertoire affecting Pakistan and GCC diaspora."},{"name":"Gaana","platform":"Gaana","mode":"import","provider":"Partner CSV","url":"https://gaana.com/","detail":"Indian and Punjabi music discovery."},{"name":"Yandex Music","platform":"Yandex Music","mode":"import","provider":"Partner CSV","url":"https://music.yandex.com/","detail":"Market and competitor-specific editorial reference."},{"name":"Beatport","platform":"Beatport","mode":"import","provider":"Partner CSV","url":"https://www.beatport.com/","detail":"Electronic music and DJ chart context."},{"name":"Musicrank","platform":"Musicrank","mode":"import","provider":"Partner CSV","url":"https://musicrank.org/","detail":"Cross-platform discovery reference, avoid double-counting source-level charts."},{"name":"MusicMetrics","platform":"MusicMetrics","mode":"import","provider":"Partner CSV","url":"https://musicmetrics.net/charts/","detail":"Useful NEW versus RE rankings, especially for Pakistan."}];
-const ICONS={
- layout:'<rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="10" width="8" height="11" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/>',
- sparkles:'<path d="m12 2 2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z"/>',
- chart:'<path d="M4 19V9m5 10V4m5 15v-7m5 7V7"/>',
- bookmark:'<path d="M6 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18l-6-4-6 4z"/>',
- database:'<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 4 18 4 18 0V5M3 12c0 4 18 4 18 0"/>',
- help:'<circle cx="12" cy="12" r="10"/><path d="M9.2 9a3 3 0 0 1 5.7 1.4c0 2-2.9 2.4-2.9 4.2M12 17h.01"/>',
- 'arrow-up-right':'<path d="M7 17 17 7M8 7h9v9"/>',
- 'arrow-right':'<path d="M4 12h16m-7-7 7 7-7 7"/>',
- search:'<circle cx="10.8" cy="10.8" r="6.5"/><path d="m16 16 5 5"/>',
- moon:'<path d="M20 16.5A8.8 8.8 0 0 1 7.5 4a9 9 0 1 0 12.5 12.5Z"/>',
- sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
- x:'<path d="M5 5 19 19M19 5 5 19"/>',
- eye:'<path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12Z"/><circle cx="12" cy="12" r="2.7"/>',
- upload:'<path d="M12 16V3m0 0L7 8m5-5 5 5M4 16v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/>',
- clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/>',
- trend:'<path d="m3 18 7-7 4 4 7-8m-7 0h7v7"/>',
- globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c-6 6-6 12 0 18m0-18c6 6 6 12 0 18"/>',
- music:'<path d="M9 18V5l12-2v13M9 18c0 4-7 4-7 0s7-4 7 0Zm12-2c0 4-7 4-7 0s7-4 7 0Z"/>',
- calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v5m10-5v5M3 10h18"/>',
- layers:'<rect x="3" y="3" width="18" height="6" rx="2"/><rect x="3" y="11" width="18" height="6" rx="2"/><path d="M6 20h12"/>',
- download:'<path d="M12 3v12m0 0-5-5m5 5 5-5M4 17v4h16v-4"/>',
- refresh:'<path d="M20 7v5h-5M4 17v-5h5M5 9a8 8 0 0 1 14-2l1 5M4 12l1 5a8 8 0 0 0 14-2"/>',
- 'chevron-down':'<path d="m6 9 6 6 6-6"/>',
- bell:'<path d="M18 8a6 6 0 0 0-12 0c0 9-3 9-3 11h18c0-2-3-2-3-11ZM10 22h4"/>',
- shield:'<path d="M12 2 21 6v6c0 5.5-3 8.3-9 10-6-1.7-9-4.5-9-10V6z"/><path d="m8 12 3 3 5-6"/>',
- info:'<circle cx="12" cy="12" r="10"/><path d="M12 11v6M12 7h.01"/>',
- menu:'<path d="M3 6h18M3 12h18M3 18h18"/>',
- check:'<path d="m4 12 5 5L20 6"/>',
- copy:'<rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/>'
-};
-const icon=(name)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]||ICONS.music}</svg>`;
-const $=id=>document.getElementById(id);
-const REGIONS={ae:'GCC',sa:'GCC',kw:'GCC',qa:'GCC',bh:'GCC',om:'GCC',eg:'Egypt',lb:'Levant',jo:'Levant',ps:'Levant',sy:'Levant',ma:'North Africa',dz:'North Africa',tn:'North Africa',ly:'North Africa',iq:'Iraq',tr:'Turkey',pk:'Pakistan'};
-const COUNTRIES={ae:'United Arab Emirates',sa:'Saudi Arabia',kw:'Kuwait',qa:'Qatar',bh:'Bahrain',om:'Oman',eg:'Egypt',lb:'Lebanon',jo:'Jordan',ps:'Palestine',sy:'Syria',ma:'Morocco',dz:'Algeria',tn:'Tunisia',ly:'Libya',iq:'Iraq',tr:'Turkey',pk:'Pakistan'};
-const REGION_PALETTE={'GCC':'#96e3c2','Egypt':'#b5a1fa','Levant':'#75c8f7','North Africa':'#ffc183','Iraq':'#ffa2c2','Turkey':'#ee829a','Pakistan':'#b8dc7f'};
-const DEMO_TITLES=[
- ['After the Tide','Nour Atlas','sa','Apple Music',12,'Recently released; increased streaming attention may be related, but the trigger is unverified.'],
- ['Layali','Mira Ray','ae','Spotify',22,'A short-form video trend is a possible driver; fictional example only.'],
- ['Midnight Boulevard','Kairo Room','eg','YouTube',7,'A music-video premiere may coincide with activity; fictional example only.'],
- ['Back to Beirut','The Cedar Club','lb','Apple Music',18,'Tour publicity could be contributing; fictional example only.'],
- ['Sahara Blue','Safa & The Waves','ma','Shazam',31,'Potential short-form discovery; fictional example only.'],
- ['Golden Hour','Rami Noor','kw','Spotify',36,'Playlist exposure may have increased reach; fictional example only.'],
- ['Roshan','Junoon Echo','pk','YouTube',14,'A new music video could be driving interest; fictional example only.'],
- ['Istanbul Nights','Deniz Mira','tr','Spotify',24,'Fictional example: release momentum may be involved, but the reason is unverified.'],
- ['City Lights','Nadine V','iq','Apple Music',47,'Reason not yet verified; fictional example only.'],
- ['Al Qamar','Yara Marwan','eg','Apple Music',25,'Recent performance may have increased searches; fictional example only.'],
- ['Beneath the Cedar','Saint Levantine','jo','Shazam',41,'Reason not yet verified; fictional example only.'],
- ['Desert Echoes','Dalia Nouri','om','Apple Music',19,'A recent artist collaboration may be a factor; fictional example only.'],
- ['Ocean of Sound','Hiba Nasser','tn','Spotify',28,'A newly published visualizer may have sparked interest; fictional example only.'],
-    ['Afterglow','Layla Prism','ae','Anghami',9,'Possible radio exposure; fictional example only.'],
-    ['Marrakech Nights','Sami Nomad','ma','Deezer',13,'Fresh editorial pickup is possible; fictional example only.'],
-    ['North Star','Ali Khan','pk','Audiomack',20,'Independent scene discovery; fictional example only.'],
-    ['Blue Hour','Eloi','dz','SoundCloud',16,'A creator upload may be circulating; fictional example only.'],
-    ['Echoes','Rana S','lb','TikTok',5,'Viral video use is fictional, not verified.'],
-    ['Neon Sea','DJ Maghreb','tn','Beatport',14,'New club release; fictional example only.']
-];
-const dubaiDay=(date=new Date())=>new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Dubai',year:'numeric',month:'2-digit',day:'2-digit'}).format(date);
-const dubaiToday=()=>dubaiDay();
-const dayOffset=(n)=>dubaiDay(new Date(Date.now()-n*86400000));
-const demoRecords=DEMO_TITLES.map((x,i)=>({id:'demo-'+i,title:x[0],artist:x[1],country:x[2],market:COUNTRIES[x[2]],region:REGIONS[x[2]],platform:x[3],rank:x[4],detected_at:dayOffset([0,0,1,1,2,2,3,3,4,5,5,6,0,1,2,3,4,5,6][i])+'T12:00:00+04:00',reason:x[5],reason_certainty:'unverified',type:'demo',source:'Illustrative demo',chart_url:'',url:'',artwork:''}));
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function safeUrl(v){try{const u=new URL(v);return ['https:','http:'].includes(u.protocol)?u.href:''}catch{return ''}}
-function readStorage(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
-function writeStorage(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true}catch{toast('Browser storage is unavailable. Your change may not persist.');return false}}
-let manual=readStorage('pulse_manual_v1',{seen:{},previous:{},entries:[],current:{}});
-let saved=readStorage('pulse_watchlist_v2',[]);
-if(!Array.isArray(saved))saved=[];
-let live={summary:{},new_entries:[],current_charts:[],source_status:[],alerts:{},status:'awaiting_first_sync'};
-let demo=true,view='overview',selectedDate=null,shownLimit=8;
-const filters={region:'all',platform:'all',source:'all',days:'7',query:'',sort:'newest'};
-function recordKey(s){return `${String(s.id||`${s.artist}:${s.title}`).normalize('NFKC').toLowerCase()}::${String(s.platform||'').toLowerCase()}`}
-function isSaved(s){return saved.includes(recordKey(s))}
-function ageDays(iso){if(!iso)return Infinity;const d=String(iso).slice(0,10);return Math.max(0,Math.round((new Date(dubaiToday()+'T12:00:00+04:00')-new Date(d+'T12:00:00+04:00'))/86400000))}
-function dateLabel(iso){if(!iso)return 'Not scanned';const dt=new Date(iso);return isNaN(+dt)?'Unknown date':new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dubai',day:'numeric',month:'short'}).format(dt)}
-function combined(){if(demo){return {status:'demo',new_entries:demoRecords,current_charts:demoRecords,source_status:[],summary:{markets_checked:0,markets_attempted:18,errors:0},alerts:{}}}
- const locals=Object.values(manual.current||{}).flat();return {...live,new_entries:[...(live.new_entries||[]),...(manual.entries||[])],current_charts:[...(live.current_charts||[]),...locals],source_status:[...(live.source_status||[]),...Object.entries(manual.current||{}).map(([key,rows])=>({country:rows[0]?.country||'',market:rows[0]?.market||key,status:'manual',count:rows.length,checked_at:rows[0]?.scanned_at,platform:rows[0]?.platform,source:'Browser CSV'}))]};}
-function cleanRecords(records){return (records||[]).filter(x=>x&&x.title&&x.artist).map(x=>({...x,market:x.market||COUNTRIES[x.country]||x.country,region:x.region||REGIONS[x.country]||'Other',platform:x.platform||'Other',source:x.source||'Browser CSV',rank:Number(x.rank)||0}));}
-function feedData(){const d=combined(),all=cleanRecords(d.new_entries),charts=cleanRecords(d.current_charts);let r=view==='charts'?charts:view==='watchlist'?[...all,...charts].filter(x=>isSaved(x)):all;
- if(view==='watchlist'){const seen=new Set();r=r.filter(x=>{const k=recordKey(x);if(seen.has(k))return false;seen.add(k);return true})}
- r=r.filter(x=>filters.region==='all'||x.region===filters.region).filter(x=>filters.platform==='all'||x.platform===filters.platform||x.appearances?.some(a=>a.platform===filters.platform)).filter(x=>filters.source==='all'||x.source===filters.source||x.appearances?.some(a=>a.source===filters.source)).filter(x=>view==='charts'||view==='watchlist'||filters.days==='all'||ageDays(x.detected_at)<Number(filters.days));
- if(selectedDate&&view!=='charts'&&view!=='watchlist')r=r.filter(x=>String(x.detected_at||'').slice(0,10)===selectedDate);
- if(filters.query)r=r.filter(x=>(x.title+' '+x.artist+' '+x.market+' '+x.platform).toLocaleLowerCase().includes(filters.query.toLocaleLowerCase()));
- if(filters.sort==='rank')r.sort((a,b)=>(a.rank||Infinity)-(b.rank||Infinity));else if(filters.sort==='artist')r.sort((a,b)=>a.artist.localeCompare(b.artist));else r.sort((a,b)=>String(b.detected_at||b.scanned_at||'').localeCompare(String(a.detected_at||a.scanned_at||'')));
- return r;
-}
-function uniqueCount(items){return new Set(items.map(recordKey)).size}
-function palette(s){const colors=[['#251a67','#b39bf9'],['#1b4f71','#7cd0f6'],['#a74964','#ffb0c1'],['#2c716b','#90e5c8'],['#845528','#ffd09c'],['#5d2a80','#e3a4ff']];let n=0;for(const c of String(s.id||s.title))n+=c.charCodeAt(0);return colors[n%colors.length]}
-function cover(s,large=false){const u=safeUrl(s.artwork);const cls=large?'cover large':'cover';if(u)return `<img class="${cls}" src="${esc(u)}" alt="" loading="lazy">`;const colors=palette(s);const letter=(s.title||'♫').trim()[0]||'♫';return `<div class="${cls}" style="background:linear-gradient(145deg,${colors[0]},${colors[1]})">${esc(letter)}</div>`}
-function toast(message){const element=document.createElement('div');element.className='toast';element.innerHTML=`${icon('check')}<span>${esc(message)}</span><button aria-label="Dismiss notification">${icon('x')}</button>`;const area=$('toast-area');area.append(element);element.querySelector('button').addEventListener('click',()=>element.remove());setTimeout(()=>element.remove(),5100)}
-function setView(target){view=target;shownLimit=target==='overview'?8:24;selectedDate=target==='charts'||target==='watchlist'||target==='sources'?null:selectedDate;
- document.querySelectorAll('[data-view]').forEach(el=>el.classList.toggle('active',el.dataset.view===target));$('breadcrumb').textContent=({overview:'Overview',entries:'Discoveries',charts:'Chart explorer',watchlist:'Watchlist',sources:'Sources & sync'})[target];
- const titles={overview:'Your next big <em>discovery.</em>',entries:'Fresh chart <em>discoveries.</em>',charts:'Explore every <em>position.</em>',watchlist:'Your editorial <em>watchlist.</em>',sources:'Trust your <em>sources.</em>'};$('page-title').innerHTML=titles[target];
- $('page-description').textContent=({overview:'One intelligent view of the tracks breaking into charts across your markets.',entries:'Explore first observations with original chart context and evidence labels.',charts:'Latest collected chart positions from available market snapshots.',watchlist:'Tracks you bookmarked for closer editorial attention. Saved only in this browser.',sources:'See what was actually checked, what failed and what still needs to be connected.'})[target];
- const overview=target==='overview';$('hero-section').hidden=!overview;$('kpi-grid').hidden=!overview;$('insights-section').hidden=!overview;$('channel-section').hidden=!overview;$('discovery-section').hidden=target==='sources';$('sources-section').hidden=target!=='sources';$('bottom-grid').hidden=target==='sources';$('days-container').hidden=target==='charts'||target==='watchlist';
- closeMobile();render();if(target!=='overview')window.scrollTo({top:0,behavior:'smooth'});
-}
-function setDemo(v){demo=Boolean(v);selectedDate=null;shownLimit=view==='overview'?8:24;render();toast(demo?'Preview mode: all demo data is fictional.':'Viewing live and imported chart records.');}
-function render(){const d=combined();const entries=cleanRecords(d.new_entries),current=cleanRecords(d.current_charts);const today=uniqueCount(entries.filter(s=>ageDays(s.detected_at)===0)),week=uniqueCount(entries.filter(s=>ageDays(s.detected_at)<7));const status=d.status||'awaiting_first_sync';
- $('demo-alert').hidden=!demo;$('demo-button-text').textContent=demo?'Exit demo':'Explore demo';$('toggle-demo').querySelector('[data-icon]')?.replaceChildren();$('toggle-demo').querySelector('[data-icon]').innerHTML=icon('eye');
- $('kpi-today').textContent=today;$('kpi-week').textContent=week;$('kpi-markets').textContent=demo?'—':d.summary?.markets_checked||0;$('kpi-tracks').textContent=current.length.toLocaleString('en-US');$('nav-count').textContent=String(week);$('watch-count').textContent=String(saved.length);
- $('kpi-today-label').textContent=demo?'Sample data':status==='awaiting_first_sync'?'Awaiting scan':today?'Detected today':'No new entries';$('kpi-week-label').textContent=demo?'Illustrative':'Last 7 days';$('kpi-coverage-label').textContent=demo?'Not live':status==='awaiting_first_sync'?'Awaiting scan':`${d.summary?.errors||0} unavailable`;
- renderChannels(d);$('hero-status').textContent=demo?'INTERACTIVE PREVIEW':status==='awaiting_first_sync'?'AWAITING FIRST SCAN':status==='sources_unavailable'?'SOURCE CONNECTION ISSUES':'MONITORING YOUR MARKETS';
- $('hero-title').innerHTML=demo?'Explore the future.<br><span>Hear it first.</span>':today?'New signals.<br><span>Fresh possibilities.</span>':status==='awaiting_first_sync'?'The sound of<br><span>what’s next.</span>':'Always listening.<br><span>Only what’s new.</span>';
- $('hero-desc').textContent=demo?'Try the filters, discovery feed, watchlist and chart exploration with fictional tracks. Real data remains clearly separate.':status==='awaiting_first_sync'?'Publish the included scanner to collect baseline charts. New signals appear after later successful checks.':today?`${today} newly observed songs today. Open a track to review its chart evidence before making an editorial decision.`:'No qualifying first observations from the latest available scans.';
- $('hero-visual-number').textContent=String(today).padStart(2,'0');$('notification-status').textContent=demo?'Preview mode: alerts are inactive':d.alerts?.telegram_configured||d.alerts?.email_configured?`Configured: ${[d.alerts?.telegram_configured?'Telegram':'',d.alerts?.email_configured?'email':''].filter(Boolean).join(' + ')}`:'Notifications not configured';
- $('source-health-heading').textContent=demo?'Preview, not live data':status==='awaiting_first_sync'?'Waiting for baseline':status==='sources_unavailable'?'Chart sources unavailable':'Source collection status';
- $('source-health-desc').textContent=demo?'Demo records are entirely fictional. Live sources are only available after running the scanner.':'The first successful collection builds the comparison baseline. The chart itself never proves why a song became popular.';
- $('last-scan').textContent=demo?'Demonstration · no live scan':d.generated_at?'Last scan: '+dateLabel(d.generated_at):'No live scan yet';
- renderActivity(entries);renderRegions(d,entries);renderFeed();renderSources(d);
-}
-function renderActivity(entries){const series=Array.from({length:7},(_,i)=>dayOffset(6-i));const counts=series.map(day=>entries.filter(x=>String(x.detected_at||'').slice(0,10)===day).length);const highest=Math.max(1,...counts);
- $('activity-chart').innerHTML=series.map((day,i)=>{const dt=new Date(day+'T12:00:00+04:00');const label=new Intl.DateTimeFormat('en-GB',{weekday:'short',timeZone:'Asia/Dubai'}).format(dt);const n=counts[i];const h=n?Math.max(14,n/highest*100):4;return `<button class="activity-day ${selectedDate===day?'selected':''}" data-day="${day}" title="${n} entries on ${day}" aria-label="${n} entries on ${day}. Click to filter" aria-pressed="${selectedDate===day}"><div class="bar-area"><div class="bar ${n?'':'zero'}" style="height:${h}%">${n?`<span class="bar-value">${n}</span>`:''}</div></div><span class="bar-day">${label}</span></button>`}).join('');
- $('clear-day').hidden=!selectedDate;
-}
-function renderRegions(data,entries){const list=['GCC','Egypt','Levant','North Africa','Iraq','Turkey','Pakistan'];const counts=Object.fromEntries(list.map(x=>[x,entries.filter(s=>s.region===x).length]));const highest=Math.max(1,...Object.values(counts));$('market-pulse').innerHTML=list.map(region=>{const c=counts[region];return `<button class="market-tile ${filters.region===region?'selected':''}" data-pulse-region="${esc(region)}" style="--dot:${REGION_PALETTE[region]};--percent:${c/highest*100}%"><div class="market-tile-head"><span></span><strong>${region}</strong></div><div class="market-tile-count">${demo?c:c}<small>observations</small></div><div class="market-progress"><span></span></div></button>`}).join('');document.querySelectorAll('[data-region]').forEach(el=>el.classList.toggle('region-active',filters.region===el.dataset.region));}
-function renderFeed(){if(view==='sources')return;const all=feedData();const limit=shownLimit;const shown=all.slice(0,limit);
- const metadata={overview:['DISCOVERY FEED','Just landed','First observed on monitored charts. These are not verified lifetime debuts.'],entries:['LATEST DISCOVERIES','All new observations','Fresh entries across monitored sources, with unverified causes clearly marked.'],charts:['CHART EXPLORER','Chart positions','Collected ranks from the most recent available snapshots.'],watchlist:['EDITORIAL SHORTLIST','Saved tracks','Your locally saved shortlist. Click the bookmark again to remove an item.']}[view];
- $('feed-kicker').textContent=metadata[0];$('feed-title').innerHTML=`${metadata[1]} <span id="feed-total" class="headline-count">${all.length}</span>`;$('feed-description').textContent=metadata[2];
- $('feed-list').innerHTML=shown.length?shown.map((s,i)=>`<div class="track-row" role="button" tabindex="0" data-row="${i}" aria-label="Open ${esc(s.title)} by ${esc(s.artist)}"><div class="track-main">${cover(s)}<div class="track-copy"><div class="track-name">${esc(s.title)}</div><div class="artist-name">${esc(s.artist)}</div></div></div><div class="market-cell"><div class="market-label">${esc(s.market)}</div><div class="platform-label">${esc(s.platform)} · ${esc(s.source||'Source unknown')}${s.appearances?.length>1?` · +${s.appearances.length-1} markets`:''}</div></div><div><span class="rank-label">#${s.rank||'?'}</span></div><div class="why-cell"><div class="why-label">${s.reason_certainty==='verified'?'EVIDENCE BACKED':'CONTEXT · UNVERIFIED'}</div><div class="why-reason">${esc(view==='charts'?s.release_date?`Released ${s.release_date}`:'Release date unavailable':s.reason||'Reason not yet verified.')}</div></div><button class="watch-toggle ${isSaved(s)?'watching':''}" data-watch="${i}" title="${isSaved(s)?'Remove from watchlist':'Add to watchlist'}" aria-label="${isSaved(s)?'Remove':'Save'} ${esc(s.title)} ${isSaved(s)?'from':'to'} watchlist" aria-pressed="${isSaved(s)}">${icon('bookmark')}</button></div>`).join(''):`<div class="empty-state"><div class="empty-graphic">${icon(view==='watchlist'?'bookmark':'sparkles')}</div><h3>${view==='watchlist'?'Nothing saved yet':view==='charts'?'No chart positions available':'Your radar is clear'}</h3><p>${view==='watchlist'?'Use the bookmark icon beside any track to save it for review.':filters.query||filters.region!=='all'||selectedDate?'No tracks match these filters. Try clearing the selection.':demo?'No demo tracks match this view.':'The first scan builds a baseline. New songs can be discovered after a later successful scan.'}</p><button id="empty-action" class="btn btn-primary">${demo?'Reset filters':'Explore demo'}</button></div>`;
- $('feed-footer').textContent=`Showing ${shown.length} of ${all.length} ${view==='charts'?'chart positions':view==='watchlist'?'saved tracks':'observations'}${demo?' · fictional demo':''}`;
- $('load-more').hidden=shown.length>=all.length;$('load-more').textContent='Show more ';$('load-more').insertAdjacentHTML('beforeend',icon('chevron-down'));
- const chips=[];if(filters.region!=='all')chips.push(['region',filters.region]);if(filters.platform!=='all')chips.push(['platform',filters.platform]);if(filters.source!=='all')chips.push(['source',filters.source]);if(selectedDate)chips.push(['date',selectedDate]);if(filters.query)chips.push(['query',`Search: ${filters.query}`]);$('active-filter-strip').hidden=!chips.length;$('active-filter-strip').innerHTML=chips.map(([k,v])=>`<button data-clear="${k}">${esc(v)} ×</button>`).join('');
- window.__visibleRows=shown;
-}
-function sourceMatches(row,s){return row.platform===s.platform && row.source===s.provider;}
-function renderChannels(data){
- const statuses=data.source_status||[], samples=['Apple Music','Spotify','YouTube Music','Anghami','Deezer','Shazam','TikTok'];
- $('channel-grid').innerHTML=samples.map((name,i)=>{
-   const matches=statuses.filter(s=>s.platform===name&&s.status==='ok');
-   const monitored=matches.length;
-   const isDemo=demo;
-   return `<button type="button" class="channel-tile channel-${i}" data-channel="${esc(name)}" aria-label="Explore ${esc(name)} tracks">
-     <span class="channel-icon">${['♫','◎','▶','◈','◉','✦','♪'][i]}</span><strong>${esc(name)}</strong>
-     <small>${isDemo?'Sample tracks':monitored?`${monitored} markets synced`:name==='Spotify'||name==='YouTube Music'?'Experimental':name==='Apple Music'?'Awaiting scan':'Import needed'}</small>
-   </button>`;
- }).join('');
-}
-function renderSources(data){if(view!=='sources')return;
- const statuses=data.source_status||[];
- let available=0, pending=0, errors=0;
- $('source-grid').innerHTML=SOURCE_CATALOG.map((s,i)=>{
-  const matches=statuses.filter(row=>sourceMatches(row,s));
-  const good=matches.filter(row=>row.status==='ok');
-  const bad=matches.filter(row=>row.status==='unavailable');
-  let label,cls;
-  if(good.length){available++;label=`${good.length} MARKET${good.length!==1?'S':''} SYNCED`;cls='';}
-  else if(bad.length){errors++;label='CHECK FAILED';cls='off';}
-  else if(s.mode==='import'){pending++;label='IMPORT NEEDED';cls='manual';}
-  else if(s.mode==='experimental'){pending++;label='EXPERIMENTAL';cls='await';}
-  else{pending++;label='NOT YET CHECKED';cls='await';}
-  const updated=good.length?good.map(x=>x.chart_date).filter(Boolean).sort().at(-1):null;
-  const external=safeUrl(s.url);
-  return `<article class="source-card" style="--source-hue:${(i*31+210)%360}">
-    <div class="source-card-top"><span class="source-platform-mark">${esc(s.name.charAt(0))}</span><span class="source-pill ${cls}">${label}</span></div>
-    <h3>${esc(s.name)}</h3><p>${esc(s.detail)}</p>
-    <div class="source-card-bottom"><span>${good.length?`${good.reduce((v,x)=>v+Number(x.count||0),0)} observed positions`:`${s.mode==='import'?'Full-chart CSV':'Optional scanner adapter'}`}${updated?` · chart ${esc(updated)}`:''}</span>
-      ${external?`<a href="${esc(external)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${esc(s.name)} source">Visit source ↗</a>`:''}
-    </div>
-    ${bad.length?`<p class="source-error">${esc(bad[0].error||'Last check unavailable')}</p>`:''}
-  </article>`;
- }).join('');
- $('source-summary').innerHTML=`<span><b>${available}</b> source groups with observations</span><span><b>${pending}</b> awaiting data</span><span><b>${errors}</b> check failures</span>`;
-}
-function selectRegion(region){filters.region=region;$('region-filter').value=region;selectedDate=null;setView('entries');}
-function clearFilters(){filters.region='all';filters.platform='all';filters.source='all';filters.days='7';filters.query='';filters.sort='newest';selectedDate=null;['region-filter','platform-filter','source-filter','days-filter','sort-select'].forEach((id,i)=>$(id).value=['all','all','all','7','newest'][i]);$('search').value='';$('clear-search').hidden=true;render();}
-function toggleSave(s){const key=recordKey(s);if(isSaved(s)){saved=saved.filter(x=>x!==key);toast('Removed from your watchlist.')}else{saved.push(key);toast('Saved to your editorial watchlist.')}writeStorage('pulse_watchlist_v2',saved);render()}
-function openDetail(s){if(!s)return;window.__activeDetail=s;const type=s.type==='demo'?'ILLUSTRATIVE PREVIEW':'CHART OBSERVATION';const source=safeUrl(s.chart_url);const song=safeUrl(s.url);const note=s.type==='demo'?'This is fictional data for interface exploration, not a real chart entry.':'The radar detected this track after its baseline. That is not proof of a first-ever chart debut or the reason behind charting.';
- $('track-details').innerHTML=`<p class="section-kicker">${type}</p><div class="track-modal-top">${cover(s,true)}<div><h2>${esc(s.title)}</h2><p>${esc(s.artist)}</p></div></div><div class="modal-chips"><span class="modal-chip">${esc(s.market)}</span><span class="modal-chip">${esc(s.platform)}</span><span class="modal-chip">${esc(s.source||'Source unknown')}</span><span class="modal-chip">Position #${s.rank||'?'}</span>${s.detected_at?`<span class="modal-chip">${esc(dateLabel(s.detected_at))}</span>`:''}</div><div class="detail-panel"><strong>WHY MIGHT IT BE CHARTING? · ${s.reason_certainty==='verified'?'EVIDENCE BACKED':'UNVERIFIED'}</strong><p>${esc(s.reason||'Reason not yet verified.')}</p></div><p class="detail-note">${esc(note)}</p><div class="modal-actions"><button class="btn btn-primary" id="detail-watch">${icon('bookmark')}${isSaved(s)?'Remove from watchlist':'Save to watchlist'}</button>${source?`<a class="btn btn-quiet" target="_blank" rel="noopener noreferrer" href="${esc(source)}">Source chart ${icon('arrow-up-right')}</a>`:''}${song?`<a class="btn btn-quiet" target="_blank" rel="noopener noreferrer" href="${esc(song)}">Track page ${icon('arrow-up-right')}</a>`:''}<button class="btn btn-quiet" id="detail-copy">${icon('copy')} Copy summary</button></div>`;
- $('detail-watch').addEventListener('click',()=>{toggleSave(s);openDetail(s)});
- $('detail-copy').addEventListener('click',async()=>{const summary=`${s.artist} : ${s.title}\n${s.market} · ${s.platform} · #${s.rank}\n${s.reason||'Reason not yet verified.'}\n${source||song||''}`;try{await navigator.clipboard.writeText(summary);toast('Editorial summary copied.')}catch{toast('Clipboard not available in this browser context.')}});
- if(!$('track-dialog').open)$('track-dialog').showModal();}
-function csvParse(str){const rows=[];let row=[],field='',quoted=false;str=str.replace(/^\uFEFF/,'');for(let i=0;i<str.length;i++){const ch=str[i];if(quoted){if(ch==='"'&&str[i+1]==='"'){field+='"';i++}else if(ch==='"')quoted=false;else field+=ch}else if(ch==='"')quoted=true;else if(ch===','){row.push(field);field=''}else if(ch==='\n'){row.push(field.replace(/\r$/,''));rows.push(row);row=[];field=''}else field+=ch}if(field||row.length){row.push(field);rows.push(row)}return rows.filter(r=>r.some(x=>x.trim()))}
-function importCsv(input){const rows=csvParse(input);if(rows.length<2)throw Error('Include a header row and at least one song.');const keys=rows.shift().map(s=>s.trim().toLowerCase().replace(/\s+/g,'_'));
- for(const required of ['country','platform','rank','title','artist'])if(!keys.includes(required))throw Error(`Missing CSV column: ${required}`);
- const groups={};let count=0;for(const values of rows){const o={};keys.forEach((k,i)=>o[k]=values[i]?.trim()||'');const cc=o.country.toLowerCase(),rank=Number(o.rank);if(!COUNTRIES[cc]||!Number.isInteger(rank)||rank<1||rank>1000||!o.title||!o.artist||!o.platform)continue;const platform=o.platform.slice(0,45);const id=(o.id||`${o.artist}||${o.title}`).normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim();const k=cc+':'+platform.toLowerCase();(groups[k]??=[]).push({id,title:o.title,artist:o.artist,country:cc,market:COUNTRIES[cc],region:REGIONS[cc],platform,rank,release_date:o.release_date||'',chart_url:o.chart_url||o.url||'',url:o.url||'',source:'Browser CSV',artwork:'',scanned_at:new Date().toISOString()});count++}
- if(!count)throw Error('No valid rows. Use a supported two-letter market code such as ae, sa or eg.');
- const next=JSON.parse(JSON.stringify(manual));let detected=0,baselines=0;for(const [k,records] of Object.entries(groups)){const prev=next.previous[k],old=new Set(prev||[]),seen=new Set(next.seen[k]||[]);if(!prev)baselines++;
- for(const s of records){if(prev&&!old.has(s.id)&&!seen.has(s.id)){const released=s.release_date?new Date(s.release_date+'T00:00:00Z'):null;let reason='Reason not yet verified. A chart position alone cannot determine the cause.';if(released&&!isNaN(+released)&&(Date.now()-released.getTime())/86400000>=0&&(Date.now()-released.getTime())/86400000<=14)reason=`Released ${s.release_date}; release momentum may have contributed, but the trigger is unverified.`;next.entries.unshift({...s,detected_at:new Date().toISOString(),reason,reason_certainty:'unverified',type:'imported'});detected++}seen.add(s.id)}next.previous[k]=records.map(s=>s.id);next.seen[k]=[...seen];next.current[k]=records;}
- if(!writeStorage('pulse_manual_v1',next))throw Error('Could not save your imported snapshots.');manual=next;return {count,detected,baselines};}
-function escapeCsv(s){const v=String(s??'');return '"'+v.replaceAll('"','""')+'"'}
-function exportCsv(){const all=feedData();if(!all.length){toast('Nothing to export with the current filters.');return}const names=['artist','title','market','region','platform','source','rank','detected_at','reason','chart_url','url','type'];const file=[names.join(','),...all.map(s=>names.map(k=>escapeCsv(s[k])).join(','))].join('\r\n');const b=new Blob([file],{type:'text/csv;charset=utf-8'});const link=document.createElement('a');const url=URL.createObjectURL(b);link.href=url;link.download=`menat-music-pulse-observations-${dubaiToday()}${demo?'-DEMO':''}.csv`;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);toast(`Exported ${all.length} ${demo?'fictional demo':'chart'} records.`)}
-function closeMobile(){$('sidebar').classList.remove('open');$('mobile-overlay').hidden=true;$('mobile-menu').setAttribute('aria-expanded','false')}
-function applyTheme(next){document.body.dataset.theme=next;writeStorage('pulse_theme_v2',next);const el=$('theme-toggle');el.innerHTML=`<span>${icon(next==='dark'?'sun':'moon')}</span>`;el.setAttribute('aria-label',next==='dark'?'Switch to light theme':'Switch to dark theme')}
-function bindEvents(){document.querySelectorAll('[data-view]').forEach(button=>button.addEventListener('click',()=>setView(button.dataset.view)));
- document.querySelectorAll('[data-region]').forEach(button=>button.addEventListener('click',()=>selectRegion(button.dataset.region)));
- $('brand-home').addEventListener('click',e=>{e.preventDefault();setView('overview')});$('hero-explore').addEventListener('click',()=>setView('entries'));
- $('toggle-demo').addEventListener('click',()=>setDemo(!demo));$('switch-live').addEventListener('click',()=>setDemo(false));
- $('theme-toggle').addEventListener('click',()=>applyTheme(document.body.dataset.theme==='dark'?'light':'dark'));
- ['region-filter','platform-filter','source-filter','days-filter','sort-select'].forEach((id,i)=>$(id).addEventListener('change',e=>{filters[['region','platform','source','days','sort'][i]]=e.target.value;shownLimit=view==='overview'?8:24;if(id==='days-filter')selectedDate=null;render()}));
- $('search').addEventListener('input',e=>{filters.query=e.target.value;shownLimit=view==='overview'?8:24;$('clear-search').hidden=!filters.query;renderFeed()});$('clear-search').addEventListener('click',()=>{filters.query='';$('search').value='';$('clear-search').hidden=true;renderFeed()});
- $('reset-filters').addEventListener('click',()=>{clearFilters();toast('Filters reset.')});$('regions-reset').addEventListener('click',()=>selectRegion('all'));$('show-all-sources').addEventListener('click',()=>setView('sources'));$('channel-grid').addEventListener('click',e=>{const tile=e.target.closest('[data-channel]');if(!tile)return;filters.platform=tile.dataset.channel;$('platform-filter').value=filters.platform;setView('charts');});
- $('activity-chart').addEventListener('click',e=>{const b=e.target.closest('[data-day]');if(!b)return;selectedDate=selectedDate===b.dataset.day?null:b.dataset.day;filters.days='all';$('days-filter').value='all';setView('entries')});
- $('market-pulse').addEventListener('click',e=>{const b=e.target.closest('[data-pulse-region]');if(b)selectRegion(b.dataset.pulseRegion)});
- $('clear-day').addEventListener('click',()=>{selectedDate=null;render()});
- $('active-filter-strip').addEventListener('click',e=>{const b=e.target.closest('[data-clear]');if(!b)return;if(b.dataset.clear==='date')selectedDate=null;if(b.dataset.clear==='region'){filters.region='all';$('region-filter').value='all'}if(b.dataset.clear==='platform'){filters.platform='all';$('platform-filter').value='all'}if(b.dataset.clear==='source'){filters.source='all';$('source-filter').value='all'}if(b.dataset.clear==='query'){filters.query='';$('search').value='';$('clear-search').hidden=true}render()});
- $('load-more').addEventListener('click',()=>{shownLimit+=25;renderFeed()});$('export-csv').addEventListener('click',exportCsv);
- $('feed-list').addEventListener('click',e=>{if(e.target.closest('#empty-action')){if(demo)clearFilters();else setDemo(true);return}const watch=e.target.closest('[data-watch]');if(watch){toggleSave(window.__visibleRows[Number(watch.dataset.watch)]);return}const row=e.target.closest('[data-row]');if(row)openDetail(window.__visibleRows[Number(row.dataset.row)])});
- $('feed-list').addEventListener('keydown',e=>{const row=e.target.closest('[data-row]');if(row&&e.target===row&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openDetail(window.__visibleRows[Number(row.dataset.row)])}});
- for(const id of ['sidebar-setup','notification-setup'])$(id).addEventListener('click',()=>$('setup-dialog').showModal());
- $('open-import').addEventListener('click',()=>$('import-dialog').showModal());$('dropzone').addEventListener('click',()=>$('import-file').click());$('dropzone').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('import-file').click()}});
- const importFile=async file=>{if(!file)return;if(!file.name.toLowerCase().endsWith('.csv')){toast('Please select a CSV file.');return}try{const results=importCsv(await file.text());$('import-dialog').close();setDemo(false);setView('entries');toast(`${results.count} rows imported · ${results.baselines} baselines · ${results.detected} new tracks.`)}catch(e){toast(e.message)}};
- $('import-file').addEventListener('change',e=>{importFile(e.target.files?.[0]);e.target.value=''});
- const dz=$('dropzone');for(const evt of ['dragenter','dragover'])dz.addEventListener(evt,e=>{e.preventDefault();dz.classList.add('dragover')});for(const evt of ['dragleave','drop'])dz.addEventListener(evt,e=>{e.preventDefault();dz.classList.remove('dragover')});dz.addEventListener('drop',e=>importFile(e.dataTransfer?.files?.[0]));
- document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>$(b.dataset.close).close()));document.querySelectorAll('.modal').forEach(el=>el.addEventListener('click',e=>{if(e.target===el)el.close()}));
- $('mobile-menu').addEventListener('click',()=>{const on=!$('sidebar').classList.contains('open');$('sidebar').classList.toggle('open',on);$('mobile-overlay').hidden=!on;$('mobile-menu').setAttribute('aria-expanded',String(on))});$('mobile-overlay').addEventListener('click',closeMobile);
- document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('search').focus()}if(e.key==='Escape'&&!document.querySelector('dialog[open]'))closeMobile()});}
-async function loadLive(){try{const response=await fetch('./data/radar.json?cache='+Date.now(),{cache:'no-store'});if(!response.ok)throw Error('Data file not found');const result=await response.json();if(!result||!Array.isArray(result.new_entries)||!Array.isArray(result.current_charts))throw Error('Invalid radar data');live=result;
- if(result.generated_at&&demo){demo=false;toast('Live scanner data loaded.')}render();}catch(e){render();toast('Live feed not available. Demo and browser imports still work.');}}
-function init(){document.querySelectorAll('[data-icon]').forEach(el=>el.innerHTML=icon(el.dataset.icon));$('today').textContent=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dubai',day:'numeric',month:'short',year:'numeric'}).format(new Date());$('year').textContent=new Date().getFullYear();applyTheme(readStorage('pulse_theme_v2','light')==='dark'?'dark':'light');bindEvents();setView('overview');loadLive();}
-document.addEventListener('DOMContentLoaded',init);
-</script></body>
+
+<script src="icons.js" defer></script><script src="app.js" defer></script></body>
 </html>

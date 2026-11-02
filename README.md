@@ -1,22 +1,27 @@
 # MENAT Music Pulse
 
-MENAT Music Pulse is an interactive regional music-chart discovery dashboard covering the Middle East, North Africa, Turkey, and Pakistan.
+A public music chart dashboard for MENAT and Pakistan. The page reads the validated
+`data/radar.json` export and refreshes it every five minutes while open. It contains
+no chart scanner, import controls, demonstration tracks, credentials or subscriber data.
 
-## Current public version
+The private background collector runs separately and updates the public data file
+daily around 12:00 Dubai time. See the dashboard's collection status and source dates
+for actual freshness. Scheduled runs and upstream feeds may be delayed.
 
-This repository hosts the **standalone interactive preview** in `index.html`. It contains clearly labelled demonstration chart data. **Live chart scanning and newsletter subscriptions are not enabled here.** No secrets or subscriber addresses belong in this public repository.
+## Data interpretation
 
-## Publish using GitHub Pages
+- Each source and market starts with a complete baseline. The baseline produces no new-entry alerts.
+- First observations, re-entries and rank movements are distinct. A first observation is not a lifetime debut.
+- Missing, partial or stale sources are disclosed. Last good charts may be retained with their original dates.
+- Unsubstantiated explanations say **Reason not verified**.
+- Apple Music RSS most-played charts, Kworb Spotify daily charts and Kworb YouTube weekly charts are distinct sources; coverage varies by market.
 
-1. Open [Settings → Pages](https://github.com/georgenehme/menat-music-pulse/settings/pages).
-2. Under **Build and deployment**, select **Deploy from a branch**.
-3. Choose branch `main` and folder `/(root)`, then click **Save**.
-4. Open [the website](https://georgenehme.github.io/menat-music-pulse/) after GitHub reports a successful Pages deployment.
+## Hosting
 
-The public URL is not guaranteed to work until GitHub Pages is enabled.
+GitHub Pages serves `main` at the repository root. Only public frontend files and the
+validated JSON export belong here. The private collector uses a dedicated deploy key
+to update that JSON file. Do not copy its source, state, snapshots or secrets here.
 
-## Next phase
-
-Keep chart-scanner scripts, snapshot history, email-provider secrets and any licensed data in a **separate private repository** or private backend. Publish only non-sensitive dashboard data. The Friday newsletter requires a configured third-party subscription and delivery provider.
-
-**Security:** Visitors can inspect public HTML, CSS and JavaScript. Never put API keys, personal data, private reports or subscriber lists in a publicly hosted website.
+For a local preview: `python -m http.server 8765 --bind 127.0.0.1`.
+Watchlists and theme choices remain in the visitor's browser. No newsletter subscriptions
+or email delivery are connected in this release. See `privacy.html`.

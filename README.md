@@ -18,6 +18,22 @@ for actual freshness. Scheduled runs and upstream feeds may be delayed.
 - An Anghami connection is prepared for Palestine and Syria's official country Top 50 playlists, but its public pages currently block the cloud collector with browser verification. Production coverage remains 16 markets until approved access or another verified feed is available. Source status exposes this limitation; local test snapshots are not production data.
 - When accessible, Anghami source dates are playlist update timestamps, distinct from collection times, and each country starts its own baseline. All collection remains in the cloud.
 
+## Labels and release credits
+
+Track details display **record label** and **distributor** separately when the
+private cloud collector finds a reliable match in ChartEX's free public chart
+previews. Matching requires the same platform, market, chart date, rank, title
+and artist; Apple release dates must also agree. Every result is attributed to
+ChartEX with a checked date. It is a reported credit, not an independent rights
+or ownership verification. Public preview coverage is partial.
+
+Apple Music album **℗/© release credits** are displayed separately, after checking
+the album ID, market and membership of the exact song ID. They are never used
+to infer a label, publisher or distributor. Missing labels say **Not available**.
+Cached credits expire after 30 days; album credits are collected in daily batches
+and rechecked weekly. All lookups run privately in the cloud, without paid API
+access or manual imports. The CSV export includes available label attribution.
+
 ## Hosting
 
 GitHub Pages serves `main` at the repository root. Only public frontend files and the
